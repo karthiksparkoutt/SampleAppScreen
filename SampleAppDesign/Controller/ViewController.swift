@@ -87,28 +87,18 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         return category.count
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-                let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        let dataVc = storyBoard.instantiateViewController(withIdentifier: "CategoryViewController") as! CategoryViewController
-        dataVc.getName = category[indexPath.row] as! String
-        self.navigationController?.pushViewController(dataVc, animated: true)
+//                let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+//        let dataVc = storyBoard.instantiateViewController(withIdentifier: "CategoryViewController") as! CategoryViewController
+//        dataVc.getName = category[indexPath.row] as! String
+//        self.navigationController?.pushViewController(dataVc, animated: true)
         
-//        let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CategoryViewController") as! CategoryViewController
-//        self.addChild(popOverVC)
-//        popOverVC.getName = category[indexPath.row] as! String
-//              popOverVC.view.frame = self.view.frame
-//              self.view.addSubview(popOverVC.view)
-//        popOverVC.didMove(toParent: self)
-//        let customViewFrame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height - 200)
-//         customView = UIView(frame: customViewFrame)
-//
-//         view.addSubview(customView)
-//
-//        customView.isHidden = false
-//
-//        let okayButtonFrame = CGRect(x: 40, y: 100, width: 50, height: 50)
-//        let okayButton = UIButton(frame: okayButtonFrame )
-//
-//         customView.addSubview(okayButton)
+let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CategoryViewController") as! CategoryViewController
+        self.addChild(popOverVC)
+        popOverVC.getName = category[indexPath.row] as! String
+
+popOverVC.view.frame = self.view.frame
+self.view.addSubview(popOverVC.view)
+        popOverVC.didMove(toParent: self)
 
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
