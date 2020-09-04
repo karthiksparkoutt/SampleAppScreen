@@ -16,6 +16,11 @@ class ViewController: UIViewController {
     var name: NSArray = []
     var imageProfile: NSArray = []
     var category: NSArray = []
+    var categoryList: NSArray = []
+    var eventList: NSArray = []
+    var typeList: NSArray = []
+    var itemList: NSArray = []
+    var designerList: NSArray = []
     let colors:[UIColor] = [#colorLiteral(red: 0.4917530417, green: 0.6604549289, blue: 0.9523091912, alpha: 1), #colorLiteral(red: 0.9411865473, green: 0.6444346309, blue: 0.3747217059, alpha: 1), #colorLiteral(red: 0.9274052978, green: 0.3840048313, blue: 0.5347460508, alpha: 1), #colorLiteral(red: 0.6471508145, green: 0.4921735525, blue: 0.9555041194, alpha: 1), #colorLiteral(red: 0.4084976912, green: 0.8862252831, blue: 0.7500914931, alpha: 1)]
     let subname: [String] = ["Title: FlyingWings", "Title: Illuster ", "Title: WingsFly", "Title: Little Girl", "Title: GirlLittle"]
     let rank: [String] = ["1", "2", "3", "4", "5"]
@@ -23,7 +28,13 @@ class ViewController: UIViewController {
     fileprivate func extractedFunc() {
         name = ["Anas Anas", "Naveen", "Elango", "Seran", "Gunal"]
         imageProfile = [UIImage(named: "one")!, UIImage(named: "two")!, UIImage(named: "three")!, UIImage(named: "four")!, UIImage(named: "five")!]
-        category = ["Desiner", "Category", "Attention", "category", "Designer"]
+        categoryList = ["Convenience Goods", "Shopping Goods", "Specialty Goods", "Unsought Goods", "Validity of Model", "Convenience goods"]
+        eventList = ["Conferences", "Seminars", "Internal Company Meetings", "Periodic Business Gatherings", "Trade Shows", "Ceremonies"]
+        typeList = ["Presentation Layer", "Application Layer", "Session Layer", "Transport Layer", "Network Layer", "Data Link Layer", "Physical Layer"]
+        itemList = ["class", "typeof", "reverse", "required", "property", "return"]
+        designerList = ["Louis Vuitton", "Gucci", "Balenciaga", "Dior Homme", "Prada", "Salvatore Ferragamo"]
+        category = ["Category", "Events", "Type", "Item", "Desiner"]
+        collectionView.indicatorStyle = UIScrollView.IndicatorStyle.white
         tableView.delegate = self
         tableView.dataSource = self
         collectionView.delegate = self
@@ -43,9 +54,8 @@ class ViewController: UIViewController {
         self.present(alertController, animated: true, completion:nil)
     }
     func didPressButtonFromCustomView(sender:UIButton) {
-         // do whatever you want
-         // make view disappears again, or remove from its superview
     }
+    
 }
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -75,11 +85,13 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        let dataVc = storyBoard.instantiateViewController(withIdentifier: "DataViewController") as! DataViewController
-        dataVc.getImage = imageProfile[indexPath.row] as! UIImage
-        dataVc.getName = name[indexPath.row] as! String
-        self.navigationController?.pushViewController(dataVc, animated: true)
+        let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "DataViewController") as! DataViewController
+        self.addChild(popOverVC)
+        popOverVC.getImage = imageProfile[indexPath.row] as! UIImage
+        popOverVC.getName = name[indexPath.row] as! String
+        popOverVC.view.frame = self.view.frame
+        self.view.addSubview(popOverVC.view)
+        popOverVC.didMove(toParent: self)
     }
 }
 extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
@@ -87,19 +99,36 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         return category.count
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//                let storyBoard = UIStoryboard(name: "Main", bundle: nil)
-//        let dataVc = storyBoard.instantiateViewController(withIdentifier: "CategoryViewController") as! CategoryViewController
-//        dataVc.getName = category[indexPath.row] as! String
-//        self.navigationController?.pushViewController(dataVc, animated: true)
-        
-let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CategoryViewController") as! CategoryViewController
+        let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CategoryViewController") as! CategoryViewController
         self.addChild(popOverVC)
-        popOverVC.getName = category[indexPath.row] as! String
-
-popOverVC.view.frame = self.view.frame
-self.view.addSubview(popOverVC.view)
+        if indexPath.row == 0 {
+            popOverVC.getName = category[indexPath.row] as! String
+            popOverVC.list = categoryList as! [String]
+        }
+        if indexPath.row == 1 {
+            popOverVC.getName = category[indexPath.row] as! String
+            popOverVC.list = eventList as! [String] 
+        }
+        if indexPath.row == 2 {
+            popOverVC.getName = category[indexPath.row] as! String
+            popOverVC.list = typeList as! [String]
+            
+        }
+        if indexPath.row == 3 {
+            popOverVC.getName = category[indexPath.row] as! String
+            popOverVC.list = itemList as! [String]
+            
+        }
+        if indexPath.row == 4 {
+            popOverVC.getName = category[indexPath.row] as! String
+            popOverVC.list = designerList as! [String]
+            
+        }
+        
+        popOverVC.view.frame = self.view.frame
+        self.view.addSubview(popOverVC.view)
         popOverVC.didMove(toParent: self)
-
+        
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! CollectionViewCell
