@@ -24,6 +24,7 @@ class ViewController: UIViewController {
     let colors:[UIColor] = [#colorLiteral(red: 0.4917530417, green: 0.6604549289, blue: 0.9523091912, alpha: 1), #colorLiteral(red: 0.9411865473, green: 0.6444346309, blue: 0.3747217059, alpha: 1), #colorLiteral(red: 0.9274052978, green: 0.3840048313, blue: 0.5347460508, alpha: 1), #colorLiteral(red: 0.6471508145, green: 0.4921735525, blue: 0.9555041194, alpha: 1), #colorLiteral(red: 0.4084976912, green: 0.8862252831, blue: 0.7500914931, alpha: 1)]
     let subname: [String] = ["Title: FlyingWings", "Title: Illuster ", "Title: WingsFly", "Title: Little Girl", "Title: GirlLittle"]
     let rank: [String] = ["1", "2", "3", "4", "5"]
+        var data : [Section] = [Section(title: "Section 1", list: ["Row 1", "Row 2", "Row 3"], isColleps: true),Section(title: "Section 2", list: ["Row 1", "Row 2", "Row 3"], isColleps: true),Section(title: "Section 3", list: ["Row 1", "Row 2", "Row 3"], isColleps: true),Section(title: "Section 4", list: ["Row 1", "Row 2", "Row 3"], isColleps: true),Section(title: "Section 5", list: ["Row 1", "Row 2", "Row 3"], isColleps: true)]
     
     fileprivate func extractedFunc() {
         name = ["Anas Anas", "Naveen", "Elango", "Seran", "Gunal"]
@@ -104,6 +105,7 @@ extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
         if indexPath.row == 0 {
             popOverVC.getName = category[indexPath.row] as! String
             popOverVC.list = categoryList as! [String]
+            popOverVC.userName = name[indexPath.row] as! String
         }
         if indexPath.row == 1 {
             popOverVC.getName = category[indexPath.row] as! String

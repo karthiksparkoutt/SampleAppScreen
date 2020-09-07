@@ -9,8 +9,9 @@
 import UIKit
 
 class CategoryTableViewCell: UITableViewCell {
-    @IBOutlet weak var categoryListLabel: UILabel!
-    
+    @IBOutlet weak var headerLabel: UILabel!
+    @IBOutlet weak var contentLabel: UILabel!
+    @IBOutlet weak var downButton: UIButton!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

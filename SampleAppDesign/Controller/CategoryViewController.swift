@@ -8,15 +8,25 @@
 
 import UIKit
 
+enum cellHeight : CGFloat{
+    case Header = 44
+    case Row = 40
+}
 class CategoryViewController: UIViewController {
-    
-    var getName = String()
-    var list = [String]()
-    
+
     @IBOutlet weak var categoryLabel: UILabel!
     @IBOutlet weak var categoryTableView: UITableView!
     @IBOutlet weak var doneButton: UIButton!
+    @IBOutlet var searchbar: UISearchBar!
+
     
+    var getName = String()
+    var list = [String]()
+    var userName = String()
+    var data: [String] = []
+    var cellData : [Section] = [Section(title: "Section 1", list: ["Row 1", "Row 2", "Row 3"], isColleps: true),Section(title: "Section 2", list: ["Row 1", "Row 2", "Row 3"], isColleps: true),Section(title: "Section 3", list: ["Row 1", "Row 2", "Row 3"], isColleps: true),Section(title: "Section 4", list: ["Row 1", "Row 2", "Row 3"], isColleps: true),Section(title: "Section 5", list: ["Row 1", "Row 2", "Row 3"], isColleps: true)]
+    var searchActive = true
+    var filtered:[String] = []
     fileprivate func extractedFunc() {
         super.viewDidLoad()
         categoryLabel.text! = getName
@@ -25,6 +35,9 @@ class CategoryViewController: UIViewController {
         doneButton.layer.cornerRadius = 2
         categoryTableView.delegate = self
         categoryTableView.dataSource = self
+        categoryTableView.tableFooterView = UIView()
+        searchbar.delegate = self
+
     }
     override func viewDidLoad() {
         extractedFunc()
@@ -58,17 +71,78 @@ class CategoryViewController: UIViewController {
     }
 }
 extension CategoryViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return list.count
+   func numberOfSections(in tableView: UITableView) -> Int {
+          return cellData.count
+      }
+      
+      func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+          return cellHeight.Header.rawValue
+      }
+      
+      func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = tableView.dequeueReusableCell(withIdentifier: "HeaderCell") as! CategoryTableViewCell
+          
+          let sectionData = cellData[section]
+          header.headerLabel.text = sectionData.title
         
+          ///arrow rotate
+          header.downButton.transform = CGAffineTransform(rotationAngle: (sectionData.isColleps)! ? 0.0 : .pi)
+          header.downButton.tag = section
+          header.downButton.addTarget(self, action: #selector(buttonHandlerSectionArrowTap(sender:)), for: .touchUpInside)
+          return header.contentView
+      }
+      func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+          return  cellData[section].isColleps ?? false ? (cellData[section].list?.count ?? 0) : 0
+      }
+      func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+          return cellHeight.Row.rawValue
+      }
+      func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ContentCell") as! CategoryTableViewCell
+          
+          let listData = cellData[indexPath.section].list
+          cell.contentLabel.text = listData?[indexPath.row]
+          
+          return cell
+      }
+
+      ///Button action arrow in header
+      @objc func buttonHandlerSectionArrowTap(sender : UIButton)  {
+          let sectionData = cellData[sender.tag]
+          sectionData.isColleps = !sectionData.isColleps!
+          categoryTableView.reloadSections(IndexSet(integer: sender.tag), with: .automatic)
+      }
+    
+    
+}
+extension CategoryViewController: UISearchBarDelegate {
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchActive = true
     }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell=tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CategoryTableViewCell
-        cell.categoryListLabel.text = self.list[indexPath.row]
-        cell.contentView.backgroundColor = UIColor.clear
-        return cell
+
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        searchActive = false
     }
-    
-    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchActive = false
+    }
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchActive = false
+    }
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+
+        filtered = data.filter({ (text) -> Bool in
+            let tmp:NSString = text as NSString
+            let range = tmp.range(of: searchText, options: NSString.CompareOptions.caseInsensitive)
+            return range.location != NSNotFound
+        })
+
+        if (filtered.count == 0){
+            searchActive = false
+        }
+        else{
+            searchActive = true
+        }
+        self.categoryTableView.reloadData()
+    }
 }
