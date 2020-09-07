@@ -441,7 +441,7 @@
                         <outlet property="categoryLabel" destination="cCa-VV-MhH" id="cuq-Ab-WXK"/>
                         <outlet property="categoryTableView" destination="jVg-y2-z7C" id="5nf-mA-ApB"/>
                         <outlet property="doneButton" destination="1LO-ZX-9vd" id="Gzy-Qa-5Et"/>
-                        <outlet property="searchbar" destination="5t2-aQ-IXs" id="nbI-Wg-Qm7"/>
+                        <outlet property="searchBar" destination="5t2-aQ-IXs" id="NRu-mv-Kvw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LRI-K0-ogY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
