@@ -9,21 +9,16 @@
 import UIKit
 
 class CategoryViewController: UIViewController {
-    
-    
-    
-    
     @IBOutlet weak var categoryLabel: UILabel!
     @IBOutlet weak var categoryTableView: UITableView!
     @IBOutlet weak var doneButton: UIButton!
     @IBOutlet weak var searchBar: UISearchBar!
     
-    var filteredData = [String]()
-    var inSearchMode = false
+   var searchedCountry = [String]()
+    var searching = false
     var getName = String()
     var list = [String]()
     var userName = String()
-    
     
     fileprivate func extractedFunc() {
         super.viewDidLoad()
@@ -35,7 +30,6 @@ class CategoryViewController: UIViewController {
         categoryTableView.dataSource = self
         searchBar.delegate = self
         searchBar.returnKeyType = UIReturnKeyType.done
-        
     }
     override func viewDidLoad() {
         extractedFunc()
@@ -44,7 +38,6 @@ class CategoryViewController: UIViewController {
         self.removeAnimate()
         //self.view.removeFromSuperview()
     }
-    
     func showAnimate()
     {
         self.view.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
@@ -54,8 +47,6 @@ class CategoryViewController: UIViewController {
             self.view.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
         });
     }
-    
-    
     func removeAnimate()
     {
         UIView.animate(withDuration: 0.25, animations: {
@@ -69,60 +60,38 @@ class CategoryViewController: UIViewController {
         });
     }
 }
-extension CategoryViewController: UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
+extension CategoryViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if inSearchMode {
-            
-            return filteredData.count
+        if searching {
+            return searchedCountry.count
+        } else {
+            return list.count
         }
-        
-        return list.count
-        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let cell = tableView.dequeueReusableCell(withIdentifier: "HeaderCell", for: indexPath) as? CategoryTableViewCell {
-            cell.contentView.backgroundColor = UIColor.clear
-            
-            
-            let text: String!
-            
-            if inSearchMode {
-                
-                text = filteredData[indexPath.row]
-                
-            } else {
-                
-                text = list[indexPath.row]
-            }
-            
-            cell.headerLabel.text = text
-
-            return cell
-            
+        let cell = tableView.dequeueReusableCell(withIdentifier: "HeaderCell") as! CategoryTableViewCell
+        if searching {
+            cell.headerLabel.text = searchedCountry[indexPath.row]
         } else {
-            
-            return UITableViewCell()
+            cell.headerLabel.text = list[indexPath.row]
         }
-        
+        return cell
     }
+    
+}
+extension CategoryViewController: UISearchBarDelegate {
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
-        if searchBar.text == nil || searchBar.text == "" {
-            
-            inSearchMode = false
-            
-            view.endEditing(true)
-            
-            categoryTableView.reloadData()
-            
-        } else {
-            
-            inSearchMode = true
-            
-            filteredData = list.filter({$0 == searchBar.text})
-            
-            categoryTableView.reloadData()
-        }
+        searchedCountry = list.filter({$0.lowercased().prefix(searchText.count) == searchText.lowercased()})
+        searching = true
+        categoryTableView.reloadData()
     }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searching = false
+        searchBar.text = ""
+        categoryTableView.reloadData()
+    }
+    
 }
